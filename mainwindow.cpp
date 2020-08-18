@@ -24,8 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](QString info, bool){
         this->statusBar()->showMessage(info);
     });
-
-    m_bleInterface->scanDevices();
 }
 
 MainWindow::~MainWindow()
@@ -45,20 +43,19 @@ void MainWindow::on_connectButton_clicked()
     m_bleInterface->connectCurrentDevice();
 }
 
-
 void MainWindow::on_sendButton_clicked()
 {
     QByteArray data;
     if(ui->asciiRadioButton->isChecked())
-        data =  QByteArray(ui->sendTextEdit->toPlainText().toLatin1());
+        data =  QByteArray(ui->sendTextEdit->text().toLatin1());
     else
-        data = QByteArray::fromHex(ui->sendTextEdit->toPlainText().toLatin1());
+        data = QByteArray::fromHex(ui->sendTextEdit->text().toLatin1());
     m_bleInterface->write(data);
     ui->sendTextEdit->clear();
 }
 void MainWindow::dataReceived(QByteArray data){
     if(ui->asciiRadioButton->isChecked()){
-        ui->receivedTextEdit->append("\n");
+        //ui->receivedTextEdit->append("\n");
         ui->receivedTextEdit->append(data);
     }
     else{

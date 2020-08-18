@@ -99,16 +99,19 @@ void BLEInterface::write(const QByteArray &data)
 
 void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)
 {
+    QString n5foo("N5-");
     if (device.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
-        qWarning() << "Discovered LE Device name: " << device.name() << " Address: "
-                   << device.address().toString();
+        qWarning() << "Discovered BLE Device name: " << device.name();
+        if (device.name().indexOf(n5foo)) {
+            qWarning("We are not interested in this device as the name does not start with N5-");
+            return;
+        }
         m_devicesNames.append(device.name());
         DeviceInfo *dev = new DeviceInfo(device);
         m_devices.append(dev);
         emit devicesNamesChanged(m_devicesNames);
         emit statusInfoChanged("Low Energy device found. Scanning for more...", true);
     }
-    //...
 }
 
 void BLEInterface::onScanFinished()
@@ -131,6 +134,8 @@ void BLEInterface::onDeviceScanError(QBluetoothDeviceDiscoveryAgent::Error error
 
 void BLEInterface::connectCurrentDevice()
 {
+    m_deviceDiscoveryAgent->stop();
+
     if(m_devices.isEmpty())
         return;
 
