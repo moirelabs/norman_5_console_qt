@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>N5 Console</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTextEdit" name="receivedTextEdit">
